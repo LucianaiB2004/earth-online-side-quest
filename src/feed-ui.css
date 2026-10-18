@@ -1,0 +1,14 @@
+.quest-utility { display:flex; align-items:center; gap:8px; flex-shrink:0; margin:4px 0; }
+.quest-utility button { padding:5px 9px; font-size:11px; background:#172c43; border:1px solid #35536f; color:#a9d8f1; }
+.quest-utility + .field { flex-shrink:0; margin:4px 0; padding:8px; background:#14283e; }
+.quest-utility + .field input { padding:6px; }
+.rail-list { overflow-y:auto; min-height:0; }
+.rail-event { flex-shrink:0; }
+.rail-event a { color:#85dbec; font-size:11px; }
+.rail-filters { grid-template-columns:repeat(3,1fr); }
+.world-area > a { color:#85dbec; }
+.daily-directory { padding-left:18px; }
+.daily-directory li { margin:10px 0; }
+.daily-directory a { color:#85dbec; }
+.daily-directory button { display:block; margin:5px 0; padding:5px 8px; border:1px solid #35536f; background:#172c43; color:#c4e7f2; }
+@media (max-width:900px) { .quest-utility { flex-wrap:wrap; } }

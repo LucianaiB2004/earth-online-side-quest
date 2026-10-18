@@ -229,6 +229,7 @@ async function structured<T>(
   validator: (v: unknown) => T,
   options?: RequestOptions,
 ): Promise<T> {
+  let lastError = "";
   for (let attempt = 0; attempt < 2; attempt++) {
     try {
       const data = await request(
@@ -239,7 +240,7 @@ async function structured<T>(
             { role: "system", content: safety },
             {
               role: "user",
-              content: `${prompt}${attempt ? "\n上次结构不合格，请严格遵守 JSON 字段和范围。" : ""}`,
+              content: `${prompt}${attempt ? `\n具体校验错误：${lastError}` : ""}${attempt ? "\n上次结构不合格，请严格遵守 JSON 字段和范围。奖励 attribute 只能使用幸运/探索/勇气/善意/感知/羁绊/尊严/想象力/生命力，不能使用任务类别生命体验。" : ""}`,
             },
           ],
           stream: false,
@@ -250,6 +251,7 @@ async function structured<T>(
       );
       return validator(content(data));
     } catch (error) {
+      lastError = error instanceof Error ? error.message : "结构不正确";
       if (!(error instanceof ApiError) || error.code !== "schema" || attempt)
         throw error;
     }
@@ -269,7 +271,7 @@ export async function generateQuest(
     );
   return structured(
     config,
-    `${questShape}\n为玩家生成一条多样、有新鲜感的小任务。参考数据：${JSON.stringify({ interests: interests.slice(0, 500), event: event ? { title: event.sourceTitle, summary: event.summary, inspiration: event.suggestedQuest } : undefined, variation: Math.random() })}`,
+    `${questShape}\n当前北京时间日期：${new Intl.DateTimeFormat("sv-SE", {timeZone:"Asia/Shanghai"}).format(new Date())}。为玩家生成一条多样、有新鲜感的小任务。默认1至3分钟，优先室内或平地，无需软件、注册或知识查证。故事60字内、说明60字内、步骤2至3条每条45字内、完成标准40字内、替代方式60字内，估时必须覆盖所有步骤。禁止楼顶、高处、夜间偏僻场所，不假定季节物种或天气，不捏造科学事实机构。奖励属性与任务类别是独立枚举，生命体验不能用作奖励。参考数据：${JSON.stringify({ interests: interests.slice(0, 500), event: event ? { title: event.sourceTitle, summary: event.summary, inspiration: event.suggestedQuest } : undefined, variation: Math.random() })}`,
     validateQuest,
     options,
   );

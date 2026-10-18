@@ -4,6 +4,8 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  schedule:
+    - cron: '17 * * * *'
 
 permissions: {}
 
@@ -26,6 +28,12 @@ jobs:
           cache: npm
       - name: Install dependencies
         run: npm ci
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Sync AIHOT daily RSS without AI
+        run: python scripts/sync-feed.py
       - name: Run unit tests
         run: npm test
       - name: Build static site

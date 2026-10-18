@@ -24,6 +24,15 @@ const reply = (value: unknown) => ({
 const ok = (value: unknown) =>
   new Response(JSON.stringify(value), { status: 200 });
 describe("quest output boundary", () => {
+  it('repairs invalid reward output with the specific error and current date context', async () => {
+    const invalid = {...getDemoQuest(),rewards:[{attribute:'生命体验',amount:1}]};
+    const fetcher = vi.fn().mockResolvedValueOnce(ok(reply(invalid))).mockResolvedValueOnce(ok(reply(getDemoQuest())));
+    await generateQuest(config, '三分钟', undefined, {fetcher});
+    const retry = JSON.parse(fetcher.mock.calls[1][1].body).messages[1].content;
+    expect(retry).toContain('具体校验错误：AI 返回的属性奖励不符合要求');
+    expect(retry).toContain('当前北京时间日期');
+    expect(retry).toContain('生命体验不能用作奖励');
+  });
   it("validates every demonstration and copies rewards", () => {
     for (let i = 0; i < 6; i++)
       expect(validateQuest(getDemoQuest(i)).isDemo).toBe(false);

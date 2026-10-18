@@ -50,6 +50,7 @@ export interface NewsSource {
   publishedAt: string;
 }
 export interface WorldEvent {
+  entries?: {title: string; url: string}[];
   title: string;
   summary: string;
   category: string;
@@ -61,7 +62,7 @@ export interface WorldEvent {
   sourceName: string;
   publishedAt: string;
   isDemo: boolean;
-  provenance: "search" | "user" | "demo";
+  provenance: "search" | "user" | "demo" | "rss";
   original: NewsSource;
 }
 export const PROVIDERS: Record<

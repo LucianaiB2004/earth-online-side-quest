@@ -8,11 +8,10 @@ import {
 } from "./lib/types";
 import {
   generateQuest,
-  fetchWorldEvents,
-  gameifyNews,
   testConnection,
 } from "./lib/ai";
-import { getDemoQuest, getDemoEventQuest, DEMO_EVENTS } from "./lib/demo";
+import { getDemoQuest, getDemoEventQuest } from "./lib/demo";
+import { loadBulletin } from "./lib/feed";
 import WorldClock from "./WorldClock";
 
 const asset = (name: string) =>
@@ -46,9 +45,15 @@ export default function App() {
     [phase, setPhase] = useState<Phase>("offered");
   const [events, setEvents] = useState<WorldEvent[]>([]),
     [interests, setInterests] = useState("");
-  const [news, setNews] = useState(""),
-    [notice, setNotice] = useState(""),
+  const [notice, setNotice] = useState(""),
     [busy, setBusy] = useState("");
+  const [feedTime, setFeedTime] = useState("");
+  const [feedLoading, setFeedLoading] = useState(false);
+  const feedRequest = useRef(false);
+  const [feedError, setFeedError] = useState("");
+  const [elapsed, setElapsed] = useState(0);
+  const [questSource, setQuestSource] = useState("");
+  const [preferences, setPreferences] = useState(false);
   const [quote, setQuote] = useState(0);
   const [eventFilter, setEventFilter] = useState("全部");
   const serial = useRef(0),
@@ -83,6 +88,7 @@ export default function App() {
     const controller = new AbortController();
     request.current = controller;
     setBusy(label);
+    setElapsed(0);
     setNotice("");
     try {
       await work(controller.signal);
@@ -121,36 +127,37 @@ export default function App() {
     void run("正在发现你的支线", async (signal) => {
       try {
         const q = await generateQuest(config, interests, event, { signal });
-        if (!signal.aborted) showQuest(q);
+        if (!signal.aborted) { showQuest(q); setQuestSource(`${PROVIDERS[config.provider].name} · ${config.model}`); }
       } catch (e) {
         if (signal.aborted) return;
-        showQuest(getDemoQuest(serial.current++));
         setNotice(
-          `${e instanceof Error ? e.message : "AI 暂时不可用。"} 已切换至明确标记的演示支线，可重新尝试。`,
+          `${e instanceof Error ? e.message : "AI 暂时不可用。"} 原任务已保留，请重新尝试。`,
         );
       }
     });
   };
-  const fetchNews = () =>
-    void run("正在搜索世界新鲜事", async (signal) => {
-      const data = await fetchWorldEvents(config, interests, { signal });
-      if (!signal.aborted) {
-        setEvents(data);
-        setNotice(
-          data.length
-            ? "已获取带搜索来源的事件。请打开原文核对事实与时间。"
-            : "没有找到足够可靠的热点，请稍后再试。",
-        );
-      }
-    });
-  const convert = () =>
-    void run("正在编写世界事件", async (signal) => {
-      const event = await gameifyNews(config, news, { signal });
-      if (!signal.aborted) {
-        setEvents([event]);
-        setNotice("已转化你提供的新闻；原始内容未经独立核实。");
-      }
-    });
+  const fetchNews = async () => {
+    if (feedRequest.current) return;
+    feedRequest.current = true;
+    setFeedLoading(true);
+    setFeedError("");
+    try {
+      const data = await loadBulletin();
+      setEvents(data.events); setFeedTime(data.fetchedAt);
+    } catch (error) { setFeedError(error instanceof Error ? error.message : "日报获取失败。"); }
+    finally { feedRequest.current = false; setFeedLoading(false); }
+  };
+  useEffect(() => {
+    void fetchNews();
+    const timer = setInterval(() => void fetchNews(), 5 * 60 * 1000);
+    return () => clearInterval(timer);
+  }, []);
+  useEffect(() => {
+    setElapsed(0);
+    if (!busy) return;
+    const timer = setInterval(() => setElapsed(value => value + 1), 1000);
+    return () => clearInterval(timer);
+  }, [busy]);
   return (
     <>
       <header className="topbar">
@@ -311,7 +318,7 @@ export default function App() {
             {busy && (
               <div className="loading" role="status">
                 <span className="spinner" />
-                {busy}…<button onClick={cancel}>取消请求</button>
+                {busy}… 已等待 {elapsed} 秒<button onClick={cancel}>取消请求</button>
               </div>
             )}
             {tab === "quest" ? (
@@ -329,6 +336,8 @@ export default function App() {
                     alt=""
                   />
                 </div>
+                <div className="quest-utility"><button onClick={() => setPreferences(!preferences)}>修改兴趣与时长偏好</button>{quest && <button disabled={!!busy} onClick={() => makeQuest()}>重新尝试 / 换一个任务</button>}</div>
+                {preferences && <label className="field">兴趣与时长偏好<input maxLength={200} value={interests} placeholder="例如：在家、独处、免费、三分钟" onChange={e => setInterests(e.target.value)} /></label>}
                 <article
                   className={`quest-card ${phase === "completed" && quest ? "complete" : ""}`}
                 >
@@ -343,7 +352,7 @@ export default function App() {
                       {quest
                         ? quest.isDemo
                           ? "演示任务"
-                          : "AI 生成"
+                          : `AI 生成 · ${questSource}`
                         : "等待触发"}
                     </span>
                   </div>
@@ -570,7 +579,7 @@ export default function App() {
                     >
                       <img src={asset(item.icon)} alt="" />
                       <span>
-                        <strong>{item.name}</strong>
+                        <strong>{item.name} · 演示</strong>
                         <small>触发主题演示支线</small>
                       </span>
                       <b>›</b>
@@ -591,61 +600,13 @@ export default function App() {
                     disabled={!!busy}
                     onClick={fetchNews}
                   >
-                    获取今日热点 ↗
+                    刷新 AI 日报 ↗
                   </button>
                 </div>
-                <label className="field">
-                  关注方向
-                  <input
-                    value={interests}
-                    maxLength={200}
-                    placeholder="AI、科学探索、游戏、体育…"
-                    onChange={(e) => setInterests(e.target.value)}
-                  />
-                </label>
-                <p className="hint">
-                  实时搜索使用阿里云通义千问的官方联网能力。本项目的 DeepSeek
-                  接入可转化你提供的新闻，尚未接入其搜索接口。搜索可能产生服务商费用。
-                </p>
-                <div className="world-tools">
-                  <details>
-                    <summary>从一则新闻开始</summary>
-                    <label className="field">
-                      粘贴新闻标题、正文和原文链接（最多 8000 字）
-                      <textarea
-                        value={news}
-                        maxLength={8000}
-                        onChange={(e) => setNews(e.target.value)}
-                        placeholder="请尽量提供正文与来源。仅粘贴链接不会自动读取网页。"
-                        rows={5}
-                      />
-                    </label>
-                    <button
-                      className="secondary"
-                      onClick={convert}
-                      disabled={!!busy || !news.trim()}
-                    >
-                      转化为世界事件
-                    </button>
-                  </details>
-                  <button
-                    className="text-button"
-                    disabled={!!busy}
-                    onClick={() => {
-                      setEvents(DEMO_EVENTS);
-                      setNotice("以下为创作演示事件，并非今日真实新闻。");
-                    }}
-                  >
-                    体验演示事件
-                  </button>
-                </div>
-                {!events.length && (
-                  <div className="world-empty">
-                    <img src={asset("camp")} alt="像素营火" />
-                    <h3>世界很大，从一点好奇开始。</h3>
-                    <p>连接 API 获取热点，或先体验演示事件。</p>
-                  </div>
-                )}
+                <p className="hint">AIHOT 日报 · 每天 08:00（北京时间）发布；本站每小时同步，页面每五分钟检查。无需 API Key，不使用 AI 改写。</p>
+                <p className="hint">{feedTime ? `最近同步：${new Date(feedTime).toLocaleString("zh-CN", {timeZone:"Asia/Shanghai",hour12:false})} 北京时间` : "正在读取日报…"}</p>
+                {feedError && <p role="alert">{feedError} <button onClick={() => void fetchNews()}>重试获取</button></p>}
+                <a href="https://aihot.news/daily" target="_blank" rel="noopener noreferrer">前往 AIHOT 阅读完整日报 ↗</a>
                 <div className="events">
                   {events.map((event, i) => (
                     <article className="event-card" key={i}>
@@ -656,15 +617,16 @@ export default function App() {
                             ? "演示事件"
                             : event.provenance === "user"
                               ? "用户提供 · 未核实"
-                              : "联网搜索 · 含来源"}
+                              : "AIHOT RSS · 来源原文"}
                         </span>
                       </div>
                       <h2>{event.title}</h2>
                       <p>{event.summary}</p>
-                      <div className="event-narrative">
+                      {!!event.entries?.length && <details><summary>展开本期 {event.entries.length} 条事件</summary><ul className="daily-directory">{event.entries.map(entry => <li key={entry.url}><a href={entry.url} target="_blank" rel="noopener noreferrer">{entry.title} ↗</a><button disabled={!!busy || /伤亡|死亡|自杀|色情|凶杀/.test(entry.title)} onClick={() => makeQuest({...event,title:entry.title,sourceTitle:entry.title,summary:entry.title,sourceUrl:entry.url,suggestedQuest:'仅依据标题主题生成安全小任务，不推断新闻正文。'})}>从这条事件生成小任务</button></li>)}</ul></details>}
+                      {event.gameNarrative && <div className="event-narrative">
                         <span>AI / 游戏化叙事</span>
                         <p>{event.gameNarrative}</p>
-                      </div>
+                      </div>}
                       <p className="reason">为什么值得关注 · {event.reason}</p>
                       <details>
                         <summary>原始新闻与来源</summary>
@@ -715,10 +677,10 @@ export default function App() {
             <div className="rail-heading">
               <Icon name="world" />
               <h2>
-                世界服务器<span>今日热点</span>
+                世界服务器<span>AI 日报</span>
               </h2>
               <button
-                disabled={!!busy}
+                disabled={feedLoading}
                 onClick={fetchNews}
                 aria-label="刷新今日热点"
               >
@@ -726,33 +688,18 @@ export default function App() {
               </button>
             </div>
             <div className="rail-filters" aria-label="事件分类">
-              {["全部", "AI 与科技", "科学探索", "文化与创作"].map((filter) => (
-                <button
-                  key={filter}
-                  aria-pressed={eventFilter === filter}
-                  className={eventFilter === filter ? "selected" : ""}
-                  onClick={() => setEventFilter(filter)}
-                >
-                  {filter === "AI 与科技"
-                    ? "AI 科技"
-                    : filter === "文化与创作"
-                      ? "文化"
-                      : filter === "科学探索"
-                        ? "科学"
-                        : filter}
-                </button>
-              ))}
+              {["全部", "今日", "往期"].map(filter => <button key={filter} aria-pressed={eventFilter === filter} className={eventFilter === filter ? "selected" : ""} onClick={() => setEventFilter(filter)}>{filter}</button>)}
             </div>
             <p className="rail-provenance">
-              {events.length
-                ? "事件来自本页获取的数据，请查看来源标签。"
-                : "演示世界 · 以下为虚构创作示例，非实时新闻。"}
+              {feedError || (feedTime ? `${Date.now() - Date.parse(feedTime) > 7200000 ? "同步已延迟 · " : ""}AIHOT · 每日 08:00 发布 · 同步 ${new Date(feedTime).toLocaleTimeString("zh-CN", {timeZone:"Asia/Shanghai",hour12:false})}` : "正在读取 AIHOT 日报…")}
             </p>
             <div className="rail-list">
-              {(events.length ? events : DEMO_EVENTS)
+              {!events.length && <p>暂无日报。<button onClick={() => void fetchNews()}>重新获取</button></p>}
+              {eventFilter === "今日" && events.length > 0 && !events.some(event => event.sourceUrl.endsWith(new Intl.DateTimeFormat("sv-SE", {timeZone:"Asia/Shanghai"}).format(new Date()))) && <p>今日日报尚未同步，可查看往期或稍后刷新。</p>}
+              {events
                 .filter(
                   (event) =>
-                    eventFilter === "全部" || event.category === eventFilter,
+                    eventFilter === "全部" || (eventFilter === "今日" ? event.sourceUrl.endsWith(new Intl.DateTimeFormat("sv-SE", {timeZone:"Asia/Shanghai"}).format(new Date())) : !event.sourceUrl.endsWith(new Intl.DateTimeFormat("sv-SE", {timeZone:"Asia/Shanghai"}).format(new Date()))),
                 )
                 .map((event, i) => (
                   <article className="rail-event" key={event.title}>
@@ -766,10 +713,11 @@ export default function App() {
                           ? "演示事件"
                           : event.provenance === "user"
                             ? "用户提供 · 未核实"
-                            : "联网搜索"}
+                            : event.publishedAt}
                       </span>
                       <h3>{event.title}</h3>
-                      <p>{event.gameNarrative}</p>
+                      <p>{event.summary}</p>
+                      <a href={event.sourceUrl} target="_blank" rel="noopener noreferrer">阅读日报 ↗</a>
                       <button
                         disabled={!!busy || !event.suggestedQuest}
                         onClick={() => makeQuest(event)}
