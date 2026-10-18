@@ -1,0 +1,1321 @@
+/* The desktop game fills the viewport; long event and task text stays inside its panel. */
+.world-rail {
+  display: none;
+}
+.signpost {
+  position: relative;
+  isolation: isolate;
+  margin: 20px auto 0;
+  width: 165px;
+  height: 140px;
+  display: grid;
+  place-items: center;
+}
+.signpost:before {
+  content: "";
+  position: absolute;
+  inset: 0 0 20px;
+  background: url("/assets/signpost.webp") center/contain no-repeat;
+  z-index: -1;
+}
+.signpost:after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  height: 30px;
+  width: 14px;
+  background: #71452a;
+  border: 3px solid #38261d;
+  z-index: -2;
+}
+.signpost span {
+  font-weight: 700;
+  font-size: 13px;
+  line-height: 1.9;
+  color: #241c1b;
+  transform: rotate(-5deg);
+  margin-top: -12px;
+}
+.sidebar-garden {
+  position: relative;
+  height: 130px;
+  width: 100%;
+  margin-top: auto;
+  overflow: hidden;
+  border-bottom: 4px solid #3e5f54;
+  background: linear-gradient(transparent 70%, #1c3f3c);
+}
+.sidebar-garden img:nth-child(1) {
+  height: 128px;
+  position: absolute;
+  left: 4px;
+  bottom: 0;
+}
+.sidebar-garden img:nth-child(2) {
+  width: 100px;
+  position: absolute;
+  left: 40px;
+  bottom: 4px;
+}
+.sidebar-garden img:nth-child(3) {
+  height: 50px;
+  position: absolute;
+  right: -7px;
+  bottom: 0;
+}
+.adventure-banner {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100px;
+  overflow: hidden;
+  margin-bottom: 12px;
+  border: 1px solid #496788;
+  background:
+    linear-gradient(90deg, #112341bb, #19396955, #111e37bb),
+    url("/assets/city.webp") center 65% / cover;
+  box-shadow: inset 0 0 0 4px #101b30;
+}
+.adventure-banner > div {
+  z-index: 2;
+  text-align: center;
+  padding: 12px 90px;
+}
+.adventure-banner span {
+  color: #9dc7dd;
+  font:
+    8px Consolas,
+    monospace;
+  letter-spacing: 2px;
+}
+.adventure-banner h2 {
+  font-size: 17px;
+  color: #fff3cd;
+  text-shadow: 2px 2px #142039;
+  margin: 9px 0;
+  letter-spacing: 1px;
+}
+.adventure-banner p {
+  font-size: 10px;
+  color: #b6d0e6;
+  margin: 0;
+}
+.banner-shop {
+  height: 133px;
+  position: absolute;
+  left: -4px;
+  bottom: -15px;
+  filter: drop-shadow(3px 3px #081322);
+}
+.banner-traveler {
+  height: 71px;
+  position: absolute;
+  right: 14px;
+  bottom: 3px;
+}
+.inspiration-paths {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+}
+.inspiration-paths button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #18283c;
+  border: 1px solid #425b6d;
+  padding: 11px;
+  text-align: left;
+  min-width: 0;
+  box-shadow: inset 0 0 0 3px #111d2d;
+}
+.inspiration-paths button:nth-child(2) {
+  border-color: #645777;
+  background: #25283f;
+}
+.inspiration-paths button:nth-child(3) {
+  border-color: #696145;
+  background: #282c37;
+}
+.inspiration-paths img {
+  height: 35px;
+  width: 34px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+.inspiration-paths strong {
+  font-size: 11px;
+  color: #d3e9db;
+  font-weight: 500;
+  display: block;
+  white-space: nowrap;
+}
+.inspiration-paths small {
+  font-size: 8px;
+  color: #99afbe;
+  display: block;
+  margin-top: 4px;
+  white-space: nowrap;
+}
+.inspiration-paths b {
+  margin-left: auto;
+  color: #80bcca;
+}
+.key-help {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0;
+  font-size: 12px;
+}
+.key-help a {
+  color: #9ee1d6;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.provider-defaults {
+  background: #101d32;
+  border: 1px solid #365269;
+  padding: 12px;
+  font-size: 11px;
+  color: #adc8d8;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+.modal {
+  padding: 24px;
+}
+.modal > .field {
+  margin-top: 12px;
+}
+.modal .privacy-note {
+  margin-top: 16px;
+  padding: 10px 12px;
+  font-size: 10px;
+  line-height: 1.8;
+}
+.modal .connection-result {
+  padding: 12px 0;
+}
+.modal .advanced-api {
+  margin: 12px 0;
+}
+.modal .key-help {
+  padding: 9px 0;
+}
+@media (min-width: 1100px) and (min-height: 620px) {
+  html,
+  body,
+  #root {
+    height: 100%;
+    min-height: 0;
+  }
+  #root {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse at 70% 10%, #23487555, transparent 60%), #0b1629;
+  }
+  .topbar {
+    height: 42px;
+    min-height: 42px;
+    padding: 0 24px;
+    background: #101d32;
+    border-bottom: 1px solid #355479;
+  }
+  .wordmark {
+    font-size: 13px;
+  }
+  .pixel-earth {
+    font-size: 21px;
+  }
+  .version {
+    font-size: 8px;
+  }
+  .settings-trigger {
+    padding: 3px 10px;
+    font-size: 11px;
+  }
+  .settings-trigger .icon {
+    width: 22px;
+    height: 24px;
+  }
+  .server {
+    font-size: 10px;
+  }
+  main {
+    max-width: none;
+    width: 100%;
+    padding: 0 16px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+  }
+  .hero {
+    height: 90px;
+    min-height: 90px;
+    overflow: hidden;
+    border-bottom: 2px solid #3b5c7c;
+    align-items: center;
+    background:
+      linear-gradient(90deg, #0c1b31 22%, #10223b00 70%),
+      url("/assets/city.webp") 75% 43%/74% auto no-repeat;
+  }
+  .hero-copy {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    width: auto;
+    padding: 0;
+    max-width: 77%;
+  }
+  .hero-copy .eyebrow,
+  .hero-note {
+    display: none;
+  }
+  .logo {
+    width: 255px;
+    max-height: 83px;
+    margin: 0;
+  }
+  .slogan {
+    font-size: 13px;
+    line-height: 1.9;
+    letter-spacing: 1px;
+    max-width: 180px;
+    margin: 0;
+    text-shadow: 1px 2px #0b1425;
+  }
+  .slogan strong {
+    display: block;
+  }
+  .landscape {
+    width: 45%;
+    height: 100%;
+    right: 0;
+    bottom: 0;
+  }
+  .city,
+  .sky-dots,
+  .scene-caption {
+    display: none;
+  }
+  .railing {
+    height: 35px;
+    width: 100%;
+    bottom: 0;
+    opacity: 0.8;
+  }
+  .traveler {
+    height: 64px;
+    right: 40%;
+    bottom: 0;
+  }
+  .hero-status {
+    left: auto;
+    right: 10px;
+    width: 245px;
+    bottom: 20px;
+    height: auto;
+    background: #0d1c31e8;
+    border: 1px solid #456482;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    box-shadow: 3px 3px #07101d;
+  }
+  .hero-status span:last-child {
+    display: none;
+  }
+  .hero-status time {
+    font-size: 10px;
+    color: #d1e5f3;
+  }
+  .game-layout {
+    display: grid;
+    grid-template-columns: 160px minmax(0, 1fr) clamp(285px, 27vw, 390px);
+    gap: 14px;
+    flex: 1;
+    min-height: 0;
+    margin-top: 12px;
+  }
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    padding: 12px 10px 0 0;
+    border-right: 1px solid #355276;
+    background: linear-gradient(#0e1f36, #0d182a);
+  }
+  .sidebar-heading {
+    font-size: 10px;
+    padding: 0 8px 15px;
+  }
+  .nav-item {
+    padding: 12px 10px;
+    gap: 10px;
+  }
+  .nav-item .icon {
+    width: 27px;
+    height: 30px;
+  }
+  .nav-item > span {
+    font-size: 12px;
+  }
+  .nav-item small {
+    font-size: 7px;
+  }
+  .nav-item.active {
+    background: linear-gradient(90deg, #244d88, #33619b);
+    border-color: #6f94c3;
+    box-shadow: inset 3px 0 #8eb6ee;
+    color: #f6f8ff;
+  }
+  .nav-item.active small {
+    color: #b9d3f0;
+  }
+  .connection {
+    margin: 14px 0;
+    padding: 14px 3px;
+    font-size: 10px;
+  }
+  .connection small {
+    font-size: 8px;
+  }
+  .world-note {
+    margin: 5px 0 0;
+  }
+  .world-note img {
+    height: 72px;
+  }
+  .world-note p {
+    font-size: 10px;
+    margin: 9px 0 4px;
+  }
+  .world-note small {
+    font-size: 8px;
+  }
+  .signpost {
+    width: 140px;
+    height: 117px;
+    margin: 5px auto 0;
+  }
+  .signpost span {
+    font-size: 11px;
+  }
+  .sidebar-garden {
+    min-height: 78px;
+    max-height: 150px;
+    flex: 1;
+  }
+  .sidebar-garden img:nth-child(1) {
+    height: 106px;
+  }
+  .play-area {
+    min-width: 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+  }
+  .section-heading {
+    min-height: 42px;
+    margin: 0 0 8px;
+    flex-shrink: 0;
+  }
+  .section-heading .eyebrow {
+    font-size: 8px;
+    letter-spacing: 1.2px;
+  }
+  h1 {
+    font-size: 21px;
+    margin: 2px 0 0;
+  }
+  .outline-tag {
+    font-size: 8px;
+    padding: 4px 6px;
+  }
+  .adventure-banner {
+    height: clamp(70px, 11vh, 118px);
+    min-height: 70px;
+    flex-shrink: 0;
+    margin: 0 0 10px;
+  }
+  .adventure-banner > div {
+    padding: 9px 80px;
+  }
+  .adventure-banner h2 {
+    font-size: 15px;
+    margin: 6px 0;
+  }
+  .adventure-banner p {
+    font-size: 9px;
+  }
+  .banner-shop {
+    height: 115px;
+  }
+  .banner-traveler {
+    height: 66px;
+  }
+  .quest-card {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    border-color: #5a7592;
+    background: #17263b;
+    box-shadow:
+      3px 3px #07101b,
+      inset 0 0 0 3px #102037;
+  }
+  .card-top {
+    padding: 10px 18px;
+    font-size: 9px;
+    min-height: 33px;
+    flex-shrink: 0;
+    background: #102039;
+  }
+  .empty-quest {
+    flex: 1;
+    min-height: 0;
+    padding: 18px 23px;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 10px;
+    background: radial-gradient(ellipse at right bottom, #dcc89b, #f0e7d4 80%);
+    color: #172944;
+    overflow: auto;
+  }
+  .empty-copy h2 {
+    font-size: clamp(23px, 2vw, 32px);
+    line-height: 1.55;
+    margin: 9px 0;
+    color: #1b2b42;
+  }
+  .empty-copy h2 span {
+    color: #8a581d;
+  }
+  .chapter {
+    color: #6a6259;
+    font-size: 10px;
+  }
+  .empty-copy p {
+    color: #4c6075;
+    font-size: 11px;
+    margin: 8px 0 16px;
+  }
+  .empty-copy > small {
+    font-size: 9px;
+    color: #5d6b75;
+  }
+  .empty-copy .primary {
+    min-height: 40px;
+    padding: 9px 17px;
+    background: #efc14c;
+    border-color: #fff0a9;
+    box-shadow:
+      inset 0 -3px #c99528,
+      3px 3px #aba18c;
+    color: #172c42;
+    font-size: 12px;
+  }
+  .quest-art img {
+    max-height: 165px;
+    object-fit: contain;
+    transform: none;
+    filter: none;
+  }
+  .art-tag {
+    font-size: 9px;
+    color: #6b5b3d;
+    background: #fff9ec66;
+    border-color: #b1a17d;
+    padding: 5px 8px;
+    margin-top: 9px;
+  }
+  .quest-content {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+    padding: 15px 20px;
+    background: linear-gradient(110deg, #f0e8d7, #e4dac4);
+    color: #182c43;
+    scrollbar-color: #9a9d96 #e3ddcd;
+  }
+  .quest-title > img {
+    width: 42px;
+    height: 42px;
+  }
+  .quest-title h2 {
+    font-size: 20px;
+    margin: 8px 0 5px;
+  }
+  .tags span {
+    font-size: 9px;
+    border-color: #acb7b4;
+    color: #365468;
+    padding: 3px 7px;
+    background: #faf9ef77;
+  }
+  .story {
+    font-size: 11px;
+    margin: 8px 0;
+    padding: 6px 10px;
+    background: #ffffff55;
+    color: #57677b;
+    border-color: #b68c43;
+    line-height: 1.6;
+  }
+  .quest-description {
+    font-size: 12px;
+    color: #253d54;
+    margin: 9px 0;
+  }
+  .steps {
+    margin: 10px 0;
+  }
+  .steps li {
+    font-size: 11px;
+    color: #364e61;
+    line-height: 1.65;
+    margin: 5px 0;
+    gap: 9px;
+  }
+  .steps li > span {
+    background: #386ba0;
+    color: #fff;
+    border-color: #7194bb;
+    font-size: 10px;
+    line-height: 1.7;
+  }
+  .criteria {
+    font-size: 10px;
+    color: #536878;
+    margin: 8px 0;
+  }
+  .criteria strong {
+    color: #287e76;
+    margin-right: 9px;
+  }
+  .quest-content details {
+    font-size: 10px;
+    margin: 8px 0;
+  }
+  .quest-content summary {
+    color: #37627c;
+  }
+  .quest-content details p {
+    margin: 5px 0;
+  }
+  .quest-actions {
+    margin-top: 12px;
+    gap: 8px;
+    position: sticky;
+    bottom: 0;
+    background: #e8dfcc;
+    padding-top: 6px;
+  }
+  .quest-actions button {
+    min-height: 35px;
+    font-size: 11px;
+    padding: 8px 14px;
+  }
+  .quest-actions .primary {
+    background: #397bd0;
+    color: #fff;
+    border-color: #85aee1;
+    box-shadow:
+      inset 0 -3px #21559c,
+      2px 2px #afa691;
+  }
+  .quest-actions .secondary {
+    background: #f2c343;
+    color: #253145;
+    border-color: #e3a32c;
+    box-shadow:
+      inset 0 -3px #c69b38,
+      2px 2px #afa691;
+  }
+  .quest-actions .text-button {
+    color: #496078;
+  }
+  .card-bottom {
+    padding-top: 5px;
+    margin-top: 7px;
+    border-color: #bbb7a8;
+    min-height: 29px;
+  }
+  .card-bottom small {
+    font-size: 8px;
+    color: #6b766f;
+  }
+  .card-bottom .text-button {
+    font-size: 10px;
+    color: #375872;
+    min-height: 25px;
+    padding: 3px;
+  }
+  .skip-message {
+    font-size: 11px;
+    background: #eee1bc;
+    color: #6e542d;
+    padding: 8px;
+    margin: 8px 0;
+  }
+  .notice,
+  .loading {
+    font-size: 10px;
+    padding: 7px 10px;
+    line-height: 1.5;
+    margin: 0 0 8px;
+    flex-shrink: 0;
+    max-height: 56px;
+    overflow: auto;
+  }
+  .notice button {
+    font-size: 16px;
+  }
+  .loading button {
+    font-size: 10px;
+  }
+  .lower-grid {
+    display: flex;
+    gap: 8px;
+    margin: 9px 0 0;
+    flex-shrink: 0;
+  }
+  .inspiration {
+    padding: 8px 10px;
+    gap: 8px;
+    flex: 1;
+    background: #132840;
+  }
+  .inspiration > img {
+    width: 27px;
+    height: 31px;
+  }
+  .inspiration .eyebrow {
+    display: none;
+  }
+  .inspiration h3 {
+    font-size: 10px;
+    margin: 0 0 3px;
+  }
+  .inspiration input {
+    font-size: 9px;
+    padding: 3px 0;
+  }
+  .world-teaser {
+    padding: 8px 10px;
+    gap: 7px;
+    width: 36%;
+    background: #142b45;
+  }
+  .world-teaser .icon {
+    width: 28px;
+    height: 30px;
+  }
+  .world-teaser > span {
+    font-size: 9px;
+    line-height: 1.6;
+  }
+  .world-teaser strong {
+    font-size: 10px;
+  }
+  .world-teaser b {
+    font-size: 15px;
+  }
+  .inspiration-paths {
+    flex-shrink: 0;
+    margin-top: 8px;
+    gap: 8px;
+  }
+  .inspiration-paths button {
+    padding: 8px;
+    height: 55px;
+    gap: 7px;
+  }
+  .inspiration-paths img {
+    width: 29px;
+    height: 30px;
+  }
+  .inspiration-paths strong {
+    font-size: 10px;
+  }
+  .inspiration-paths small {
+    font-size: 8px;
+  }
+  .quote-strip {
+    margin: 7px 0 0;
+    padding: 5px 1px;
+    min-height: 26px;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .quote-strip > span {
+    font-size: 8px;
+  }
+  .quote-strip p {
+    font-size: 9px;
+  }
+  .quote-strip button {
+    font-size: 16px;
+  }
+  .rewards {
+    padding: 6px 0;
+  }
+  .rewards h3 {
+    font-size: 26px;
+    margin: 5px;
+  }
+  .rewards > p {
+    color: #58644b;
+    font-size: 12px;
+    margin: 6px 0;
+  }
+  .reward-row {
+    gap: 24px;
+    margin: 15px 0;
+  }
+  .reward img {
+    height: 55px;
+    width: 55px;
+  }
+  .reward strong {
+    font-size: 15px;
+    color: #7c5a24;
+    margin-top: 8px;
+  }
+  .rewards small {
+    font-size: 9px;
+    color: #6d755e;
+    margin-bottom: 14px;
+  }
+  .rewards .eyebrow {
+    color: #6e785e;
+  }
+  .rewards h3 {
+    color: #896029;
+  }
+  .world-rail {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    background: linear-gradient(#12253e, #0f1d32);
+    border: 1px solid #426382;
+    box-shadow: inset 0 0 0 4px #0c1b2e;
+    padding: 15px;
+  }
+  .rail-heading {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    min-height: 34px;
+    flex-shrink: 0;
+  }
+  .rail-heading .icon {
+    height: 31px;
+    width: 31px;
+  }
+  .rail-heading h2 {
+    font-size: 14px;
+    letter-spacing: 1px;
+    flex: 1;
+    margin: 0;
+  }
+  .rail-heading h2 span {
+    display: block;
+    font:
+      8px/1.8 Consolas,
+      monospace;
+    color: #9ab4d0;
+    letter-spacing: 2px;
+  }
+  .rail-heading > button {
+    font-size: 22px;
+    color: #9ccadf;
+    padding: 5px 8px;
+    border: 1px solid #345778;
+    background: #132e4c;
+  }
+  .rail-filters {
+    display: flex;
+    background: #0d1c31;
+    border: 1px solid #2f4d6c;
+    margin-top: 14px;
+    flex-shrink: 0;
+  }
+  .rail-filters button {
+    flex: 1;
+    font-size: 10px;
+    padding: 9px 4px;
+    color: #9bb3ce;
+  }
+  .rail-filters button.selected {
+    background: #3476c4;
+    color: #fff;
+    box-shadow: inset 0 -2px #6eacff;
+  }
+  .rail-provenance {
+    font-size: 9px;
+    color: #9cafc4;
+    line-height: 1.6;
+    margin: 9px 0;
+    flex-shrink: 0;
+  }
+  .rail-list {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    scrollbar-width: thin;
+    scrollbar-color: #3b5b7a transparent;
+  }
+  .rail-event {
+    display: flex;
+    gap: 10px;
+    background: linear-gradient(120deg, #1b3452, #14253d);
+    border: 1px solid #314f6e;
+    padding: 13px 10px;
+    flex: 1;
+    min-height: 110px;
+  }
+  .event-number {
+    font:
+      bold 11px/1.7 Consolas,
+      monospace;
+    color: #fff;
+    background: #685bc7;
+    box-shadow: 2px 2px #102139;
+    padding: 2px 5px;
+    height: 23px;
+    flex-shrink: 0;
+  }
+  .rail-event:nth-child(2) .event-number {
+    background: #277ba0;
+  }
+  .rail-event:nth-child(3) .event-number {
+    background: #947237;
+  }
+  .rail-event > div {
+    min-width: 0;
+    flex: 1;
+  }
+  .rail-category {
+    font-size: 8px;
+    color: #91b5d4;
+  }
+  .rail-event h3 {
+    font-size: 12px;
+    line-height: 1.6;
+    margin: 6px 0;
+    color: #e0edfc;
+    font-weight: 600;
+  }
+  .rail-event p {
+    font-size: 10px;
+    line-height: 1.8;
+    color: #a7bdd2;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .rail-event button {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    font-size: 9px;
+    color: #8fd3d3;
+    padding: 8px 0 0;
+  }
+  .rail-bottom {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 0;
+    flex-shrink: 0;
+  }
+  .rail-bottom img {
+    width: 61px;
+    height: 55px;
+    object-fit: contain;
+  }
+  .rail-bottom p {
+    font-size: 9px;
+    color: #9ab7cc;
+    line-height: 1.8;
+    margin: 0;
+  }
+  .rail-bottom strong {
+    font-weight: 500;
+    color: #cfdbcc;
+  }
+  .rail-open {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 11px;
+    background: #1d4b82;
+    color: #d5e9fc;
+    border-color: #3e75a9;
+    min-height: 37px;
+    flex-shrink: 0;
+  }
+  .world-area {
+    min-height: 0;
+    flex: 1;
+    overflow: auto;
+    padding-right: 5px;
+    scrollbar-width: thin;
+    scrollbar-color: #426382 #132039;
+  }
+  .world-toolbar {
+    padding: 13px 16px;
+  }
+  .world-toolbar p {
+    font-size: 13px;
+  }
+  .world-toolbar .primary {
+    font-size: 11px;
+    padding: 9px 12px;
+    min-height: 36px;
+  }
+  .world-area > .field {
+    margin-top: 12px;
+    font-size: 11px;
+  }
+  .world-area .field input {
+    padding: 9px;
+    font-size: 12px;
+  }
+  .world-area .hint {
+    font-size: 10px;
+    margin: 8px 0;
+  }
+  .world-tools {
+    gap: 10px;
+  }
+  .world-tools details {
+    margin: 6px 0;
+  }
+  .world-tools > .text-button {
+    margin-top: 3px;
+  }
+  .world-empty {
+    padding: 18px;
+  }
+  .world-empty img {
+    height: 70px;
+  }
+  .event-card {
+    padding: 17px;
+    margin-top: 12px;
+  }
+  .event-card h2 {
+    font-size: 18px;
+  }
+  .event-card p {
+    font-size: 11px;
+  }
+  footer {
+    margin: 7px 0 0;
+    padding: 5px 0 7px;
+    min-height: 27px;
+    gap: 12px;
+    font-size: 8px;
+    flex-shrink: 0;
+    align-items: center;
+  }
+  footer small {
+    width: auto;
+    font-size: 8px;
+  }
+}
+@media (min-width: 1100px) and (max-height: 770px) and (min-height: 620px) {
+  .hero {
+    height: 74px;
+    min-height: 74px;
+  }
+  .logo {
+    width: 218px;
+    max-height: 68px;
+  }
+  .hero-status {
+    bottom: 10px;
+  }
+  .slogan {
+    font-size: 12px;
+  }
+  .adventure-banner {
+    height: 65px;
+    min-height: 65px;
+  }
+  .adventure-banner span,
+  .adventure-banner p {
+    display: none;
+  }
+  .adventure-banner h2 {
+    font-size: 14px;
+  }
+  .banner-shop {
+    height: 100px;
+  }
+  .banner-traveler {
+    height: 53px;
+  }
+  .inspiration-paths button {
+    height: 45px;
+    padding: 5px;
+  }
+  .inspiration-paths small {
+    display: none;
+  }
+  .lower-grid {
+    margin-top: 7px;
+  }
+  .world-note {
+    display: none;
+  }
+  .signpost {
+    margin-top: auto;
+  }
+  .quest-content {
+    padding: 11px 16px;
+  }
+  .quest-title h2 {
+    font-size: 18px;
+  }
+  .story {
+    font-size: 10px;
+    margin: 5px 0;
+  }
+  .quest-title > img {
+    width: 33px;
+    height: 33px;
+  }
+  .quest-description {
+    font-size: 11px;
+    margin: 6px 0;
+  }
+  .steps {
+    margin: 7px 0;
+  }
+  .steps li {
+    font-size: 10px;
+    margin: 4px 0;
+  }
+  .criteria {
+    font-size: 9px;
+  }
+  .quest-actions {
+    margin-top: 7px;
+  }
+  .card-top {
+    padding: 8px 17px;
+    min-height: 29px;
+  }
+  .empty-copy h2 {
+    font-size: 24px;
+  }
+  .empty-copy p {
+    font-size: 10px;
+    margin: 6px 0 12px;
+  }
+  .quest-art img {
+    max-height: 130px;
+  }
+  .art-tag {
+    display: none;
+  }
+  .rail-bottom {
+    padding: 8px 0;
+  }
+  .rail-bottom img {
+    height: 40px;
+    width: 47px;
+  }
+  .rail-event {
+    min-height: 95px;
+    padding: 10px;
+  }
+  .rail-event p {
+    -webkit-line-clamp: 2;
+    font-size: 9px;
+  }
+  .rail-event h3 {
+    font-size: 11px;
+  }
+  .rail-category {
+    font-size: 7px;
+  }
+  .rail-filters {
+    margin-top: 10px;
+  }
+  .rail-provenance {
+    font-size: 8px;
+  }
+  .rail-heading h2 {
+    font-size: 12px;
+  }
+}
+@media (max-width: 1099px) {
+  .signpost,
+  .sidebar-garden {
+    display: none;
+  }
+  .adventure-banner {
+    min-height: 92px;
+  }
+  .adventure-banner h2 {
+    font-size: 14px;
+  }
+  .adventure-banner > div {
+    padding: 10px 65px;
+  }
+  .banner-shop {
+    height: 105px;
+  }
+  .banner-traveler {
+    height: 60px;
+  }
+  .inspiration-paths {
+    margin: 13px 0;
+  }
+  .inspiration-paths button {
+    padding: 8px;
+    gap: 7px;
+  }
+  .inspiration-paths strong {
+    font-size: 9px;
+  }
+  .inspiration-paths small {
+    display: none;
+  }
+  .inspiration-paths img {
+    width: 24px;
+    height: 28px;
+  }
+}
+@media (min-width: 1100px) and (min-height: 620px) {
+  .play-area:has(.quest-content) .lower-grid {
+    display: none;
+  }
+  .play-area:has(.quest-content) .adventure-banner {
+    height: 60px;
+    min-height: 60px;
+  }
+  .play-area:has(.quest-content) .adventure-banner p,
+  .play-area:has(.quest-content) .adventure-banner > div > span {
+    display: none;
+  }
+  .quest-card.complete .story {
+    display: none;
+  }
+  .quest-card.complete .quest-title h2 {
+    font-size: 16px;
+  }
+  .quest-card.complete .quest-title > img {
+    width: 32px;
+    height: 32px;
+  }
+  .quest-card.complete .rewards {
+    padding: 8px 0;
+  }
+  .quest-card.complete .reward-row {
+    margin: 12px 0;
+    gap: 27px;
+  }
+  .quest-card.complete .reward img {
+    width: 48px;
+    height: 48px;
+  }
+  .quest-card.complete .rewards small {
+    margin-bottom: 10px;
+  }
+  .quest-card.complete .rewards .primary {
+    min-height: 35px;
+    padding: 8px 16px;
+    font-size: 11px;
+  }
+  .rail-event {
+    overflow: hidden;
+    flex: 1 0 auto;
+  }
+  .rail-event h3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    overflow-wrap: anywhere;
+  }
+}
+@media (min-width: 1100px) and (min-height: 620px) and (max-height: 770px) {
+  .play-area:has(.quest-content) .adventure-banner {
+    display: none;
+  }
+  .rail-event p {
+    -webkit-line-clamp: 1;
+  }
+  .rail-event {
+    padding: 8px 9px;
+    min-height: 96px;
+  }
+  .rail-event h3 {
+    margin: 4px 0;
+  }
+  .rail-event button {
+    padding-top: 5px;
+  }
+  .quest-card.complete .rewards h3 {
+    font-size: 23px;
+    margin: 3px;
+  }
+  .quest-card.complete .rewards > p {
+    font-size: 11px;
+    margin: 5px 0;
+  }
+  .quest-card.complete .rewards .eyebrow {
+    font-size: 8px;
+  }
+  .quest-content {
+    padding: 8px 16px;
+  }
+  .quest-title h2 {
+    font-size: 17px;
+    line-height: 1.35;
+    margin: 5px 0 3px;
+  }
+  .quest-content details {
+    margin: 3px 0;
+  }
+  .story {
+    margin: 3px 0;
+    padding: 4px 9px;
+  }
+  .card-bottom {
+    min-height: 24px;
+    margin-top: 4px;
+    padding-top: 2px;
+  }
+  .card-bottom .text-button {
+    min-height: 22px;
+  }
+  .notice button {
+    line-height: 1;
+  }
+  .criteria {
+    margin: 5px 0;
+  }
+}
