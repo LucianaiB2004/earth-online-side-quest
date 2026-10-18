@@ -1,0 +1,534 @@
+/* Wide desktop windows use the visual proportions of a 125% browser view.
+   Layout dimensions remain viewport based; browser zoom and device pixels are untouched. */
+@media (min-width: 1600px) and (min-height: 900px) {
+  .topbar {
+    height: 52px;
+    min-height: 52px;
+    padding-inline: 28px;
+  }
+  .wordmark {
+    font-size: 16px;
+    gap: 15px;
+  }
+  .pixel-earth {
+    font-size: 26px;
+  }
+  .version {
+    font-size: 10px;
+  }
+  .server {
+    font-size: 12px;
+  }
+  .settings-trigger {
+    padding: 5px 14px;
+    font-size: 13px;
+  }
+  .settings-trigger .icon {
+    width: 28px;
+    height: 30px;
+  }
+  main {
+    padding-inline: 18px;
+  }
+  .hero {
+    height: 94px;
+    min-height: 94px;
+  }
+  .logo {
+    width: 275px;
+    max-height: 88px;
+  }
+  .hero-copy {
+    gap: 25px;
+  }
+  .slogan {
+    font-size: 15px;
+    max-width: 225px;
+  }
+  .traveler {
+    height: 78px;
+  }
+  .hero-status {
+    width: 305px;
+    padding: 12px;
+    gap: 8px;
+    bottom: 13px;
+    font-size: 12px;
+  }
+  .hero-status time {
+    font-size: 12px;
+  }
+  .game-layout {
+    grid-template-columns: 200px minmax(0, 1fr) clamp(360px, 25.5vw, 490px);
+    gap: 18px;
+    margin-top: 15px;
+  }
+  .sidebar {
+    padding: 15px 12px 0 0;
+  }
+  .sidebar-heading {
+    font-size: 12px;
+    padding-bottom: 18px;
+  }
+  .nav-item {
+    padding: 15px 12px;
+    gap: 13px;
+    margin-bottom: 12px;
+  }
+  .nav-item .icon {
+    width: 34px;
+    height: 38px;
+  }
+  .nav-item > span {
+    font-size: 15px;
+  }
+  .nav-item small {
+    font-size: 9px;
+  }
+  .nav-item b {
+    font-size: 22px;
+  }
+  .connection {
+    margin: 18px 0;
+    padding: 18px 4px;
+    font-size: 12px;
+  }
+  .connection small {
+    font-size: 10px;
+  }
+  .world-note img {
+    height: 90px;
+  }
+  .world-note p {
+    font-size: 12px;
+  }
+  .world-note small {
+    font-size: 10px;
+  }
+  .signpost {
+    width: 175px;
+    height: 146px;
+  }
+  .signpost span {
+    font-size: 14px;
+  }
+  .sidebar-garden {
+    min-height: 100px;
+    max-height: 175px;
+  }
+  .sidebar-garden img:nth-child(1) {
+    height: 150px;
+  }
+  .sidebar-garden img:nth-child(2) {
+    width: 125px;
+    left: 45px;
+  }
+  .sidebar-garden img:nth-child(3) {
+    height: 62px;
+  }
+  .section-heading {
+    min-height: 52px;
+    margin-bottom: 10px;
+  }
+  .section-heading .eyebrow {
+    font-size: 10px;
+    letter-spacing: 1.5px;
+  }
+  h1 {
+    font-size: 28px;
+  }
+  .outline-tag {
+    font-size: 10px;
+    padding: 6px 8px;
+  }
+  .adventure-banner {
+    height: 110px;
+    min-height: 110px;
+    margin-bottom: 12px;
+  }
+  .adventure-banner h2 {
+    font-size: 20px;
+  }
+  .adventure-banner p {
+    font-size: 12px;
+  }
+  .adventure-banner span {
+    font-size: 10px;
+  }
+  .banner-shop {
+    height: 145px;
+  }
+  .banner-traveler {
+    height: 82px;
+  }
+  .card-top {
+    min-height: 39px;
+    padding: 11px 22px;
+    font-size: 11px;
+  }
+  .empty-quest {
+    padding: 24px 30px;
+    grid-template-columns: 1.2fr 1fr;
+  }
+  .chapter {
+    font-size: 13px;
+  }
+  .empty-copy h2 {
+    font-size: 36px;
+    line-height: 1.5;
+    margin: 14px 0;
+  }
+  .empty-copy p {
+    font-size: 14px;
+    line-height: 1.8;
+    margin: 10px 0 20px;
+  }
+  .empty-copy .primary {
+    min-height: 52px;
+    font-size: 15px;
+    padding: 12px 23px;
+  }
+  .empty-copy > small {
+    font-size: 11px;
+    margin-top: 15px;
+  }
+  .quest-art img {
+    max-height: 205px;
+  }
+  .art-tag {
+    font-size: 11px;
+    margin-top: 12px;
+    padding: 7px 11px;
+  }
+  .lower-grid {
+    gap: 10px;
+    margin-top: 10px;
+  }
+  .inspiration {
+    padding: 12px 14px;
+    gap: 12px;
+  }
+  .inspiration > img {
+    width: 35px;
+    height: 40px;
+  }
+  .inspiration h3 {
+    font-size: 13px;
+    margin-bottom: 5px;
+  }
+  .inspiration input {
+    font-size: 11px;
+    padding: 4px 0;
+  }
+  .world-teaser {
+    padding: 12px 14px;
+    gap: 10px;
+  }
+  .world-teaser .icon {
+    width: 35px;
+    height: 38px;
+  }
+  .world-teaser > span {
+    font-size: 11px;
+  }
+  .world-teaser strong {
+    font-size: 13px;
+  }
+  .inspiration-paths {
+    gap: 10px;
+    margin-top: 10px;
+  }
+  .inspiration-paths button {
+    height: 60px;
+    padding: 10px;
+    gap: 10px;
+  }
+  .inspiration-paths img {
+    width: 36px;
+    height: 38px;
+  }
+  .inspiration-paths strong {
+    font-size: 12px;
+  }
+  .inspiration-paths small {
+    font-size: 10px;
+  }
+  .quote-strip {
+    min-height: 32px;
+    margin-top: 9px;
+    padding-block: 6px;
+  }
+  .quote-strip > span {
+    font-size: 10px;
+  }
+  .quote-strip p {
+    font-size: 11px;
+  }
+  .quote-strip button {
+    font-size: 20px;
+  }
+  .notice,
+  .loading {
+    font-size: 12px;
+    padding: 8px 12px;
+  }
+  .world-rail {
+    padding: 18px;
+  }
+  .rail-heading {
+    min-height: 42px;
+    gap: 12px;
+  }
+  .rail-heading .icon {
+    width: 39px;
+    height: 39px;
+  }
+  .rail-heading h2 {
+    font-size: 17px;
+  }
+  .rail-heading h2 span {
+    font-size: 10px;
+  }
+  .rail-heading > button {
+    font-size: 27px;
+    padding: 7px 10px;
+  }
+  .rail-filters {
+    margin-top: 17px;
+  }
+  .rail-filters button {
+    font-size: 13px;
+    padding: 11px 5px;
+  }
+  .rail-provenance {
+    font-size: 11px;
+    margin: 11px 0;
+  }
+  .rail-list {
+    gap: 11px;
+  }
+  .rail-event {
+    padding: 15px 12px;
+    gap: 12px;
+    min-height: 135px;
+  }
+  .event-number {
+    font-size: 14px;
+    height: 29px;
+    padding: 2px 6px;
+  }
+  .rail-category {
+    font-size: 10px;
+  }
+  .rail-event h3 {
+    font-size: 15px;
+    margin: 7px 0;
+  }
+  .rail-event p {
+    font-size: 12px;
+  }
+  .rail-event button {
+    font-size: 11px;
+    padding-top: 10px;
+  }
+  .rail-bottom {
+    padding: 14px 0;
+    gap: 10px;
+  }
+  .rail-bottom img {
+    width: 75px;
+    height: 68px;
+  }
+  .rail-bottom p {
+    font-size: 11px;
+  }
+  .rail-open {
+    font-size: 14px;
+    min-height: 46px;
+    padding: 12px 18px;
+  }
+  footer {
+    min-height: 30px;
+    font-size: 10px;
+    padding-block: 6px;
+  }
+  footer small {
+    font-size: 9px;
+  }
+  .quest-content {
+    padding: 18px 24px;
+  }
+  .quest-title h2 {
+    font-size: 24px;
+  }
+  .quest-title > img {
+    width: 50px;
+    height: 50px;
+  }
+  .tags span {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+  .story {
+    font-size: 13px;
+  }
+  .quest-description {
+    font-size: 14px;
+  }
+  .steps li {
+    font-size: 13px;
+  }
+  .criteria {
+    font-size: 12px;
+  }
+  .quest-content details {
+    font-size: 12px;
+  }
+  .quest-actions button {
+    font-size: 14px;
+    min-height: 44px;
+    padding: 10px 18px;
+  }
+  .card-bottom small {
+    font-size: 10px;
+  }
+  .card-bottom .text-button {
+    font-size: 12px;
+  }
+  .quest-card.complete .quest-title h2 {
+    font-size: 20px;
+  }
+  .quest-card.complete .rewards h3 {
+    font-size: 32px;
+  }
+  .quest-card.complete .rewards > p {
+    font-size: 14px;
+  }
+  .quest-card.complete .reward img {
+    width: 60px;
+    height: 60px;
+  }
+  .quest-card.complete .reward strong {
+    font-size: 18px;
+  }
+  .quest-card.complete .rewards small {
+    font-size: 11px;
+  }
+  .quest-card.complete .rewards .primary {
+    min-height: 43px;
+    font-size: 14px;
+  }
+}
+@media (min-width: 1600px) and (min-height: 900px) and (max-height: 960px) {
+  .adventure-banner {
+    height: 82px;
+    min-height: 82px;
+  }
+  .adventure-banner > div > span,
+  .adventure-banner p,
+  .world-note {
+    display: none;
+  }
+  .adventure-banner h2 {
+    font-size: 19px;
+  }
+  .banner-shop {
+    height: 130px;
+  }
+  .banner-traveler {
+    height: 68px;
+  }
+  .signpost {
+    margin-top: auto;
+  }
+  .inspiration-paths small {
+    display: none;
+  }
+  .inspiration-paths button {
+    height: 54px;
+  }
+  .empty-copy h2 {
+    font-size: 32px;
+    margin: 7px 0;
+  }
+  .empty-copy p {
+    margin: 6px 0 12px;
+  }
+  .empty-copy > small {
+    margin-top: 8px;
+  }
+  .art-tag {
+    display: none;
+  }
+  .empty-quest {
+    padding-block: 10px;
+  }
+  .rail-event p {
+    -webkit-line-clamp: 1;
+    font-size: 11px;
+  }
+  .rail-event {
+    min-height: 120px;
+    padding: 8px 12px;
+  }
+  .rail-event h3 {
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 4px 0;
+  }
+  .rail-event button {
+    font-size: 10px;
+    padding-top: 6px;
+  }
+  .rail-bottom {
+    padding: 10px 0;
+  }
+  .rail-bottom img {
+    height: 52px;
+    width: 60px;
+  }
+  .play-area:has(.quest-content) .adventure-banner {
+    display: none;
+  }
+  .quest-content {
+    padding: 14px 20px;
+  }
+  .quest-title h2 {
+    font-size: 22px;
+    margin: 7px 0 4px;
+  }
+  .quest-title > img {
+    width: 40px;
+    height: 40px;
+  }
+  .story {
+    font-size: 12px;
+    margin: 6px 0;
+    padding: 6px 10px;
+  }
+  .quest-description {
+    font-size: 13px;
+    margin: 7px 0;
+  }
+  .steps {
+    margin: 8px 0;
+  }
+  .steps li {
+    font-size: 12px;
+    margin: 5px 0;
+  }
+  .criteria {
+    font-size: 11px;
+    margin: 6px 0;
+  }
+  .quest-content details {
+    font-size: 11px;
+    margin: 6px 0;
+  }
+  .quest-actions {
+    margin-top: 8px;
+  }
+  .card-bottom {
+    margin-top: 5px;
+  }
+}

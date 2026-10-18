@@ -5,10 +5,26 @@ for (const size of [
   { width: 1366, height: 768 },
   { width: 1440, height: 900 },
   { width: 1920, height: 1080 },
+  { width: 1920, height: 900 },
+  { width: 1600, height: 900 },
+  { width: 1600, height: 800 },
 ]) {
   test(`桌面一屏展示 ${size.width}x${size.height}`, async ({ page }) => {
     await page.setViewportSize(size);
     await page.goto("/");
+    await expect
+      .poll(() =>
+        page
+          .locator("img")
+          .evaluateAll((images) =>
+            images.every(
+              (image) =>
+                (image as HTMLImageElement).complete &&
+                (image as HTMLImageElement).naturalWidth > 0,
+            ),
+          ),
+      )
+      .toBe(true);
     const assertScreen = async () => {
       expect(
         await page.evaluate(() => document.documentElement.scrollHeight),
@@ -20,8 +36,36 @@ for (const size of [
       await expect(page.locator(".inspiration-paths")).toBeInViewport();
     };
     await assertScreen();
+    if (size.width >= 1600 && size.height >= 900) {
+      expect(
+        await page
+          .locator(".sidebar")
+          .evaluate((el) => el.getBoundingClientRect().width),
+      ).toBeGreaterThanOrEqual(195);
+      expect(
+        await page
+          .locator(".rail-event h3")
+          .first()
+          .evaluate((el) => parseFloat(getComputedStyle(el).fontSize)),
+      ).toBeGreaterThanOrEqual(14);
+      expect(
+        await page
+          .locator(".empty-copy .primary")
+          .evaluate((el) => el.getBoundingClientRect().height),
+      ).toBeGreaterThanOrEqual(48);
+      expect(
+        await page
+          .locator(".empty-quest")
+          .evaluate((el) => el.scrollHeight <= el.clientHeight),
+      ).toBe(true);
+      expect(
+        await page
+          .locator(".rail-list")
+          .evaluate((el) => el.scrollHeight <= el.clientHeight),
+      ).toBe(true);
+    }
     await page.screenshot({
-      path: `docs/screenshots/desktop-${size.width}.png`,
+      path: `docs/screenshots/desktop-${size.width}${size.height === 900 && (size.width === 1920 || size.width === 1600) ? "-900" : ""}.png`,
       animations: "disabled",
     });
     await page
