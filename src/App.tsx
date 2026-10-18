@@ -13,6 +13,7 @@ import {
   testConnection,
 } from "./lib/ai";
 import { getDemoQuest, getDemoEventQuest, DEMO_EVENTS } from "./lib/demo";
+import WorldClock from "./WorldClock";
 
 const asset = (name: string) =>
   `${import.meta.env.BASE_URL}assets/${name}.webp`;
@@ -150,12 +151,6 @@ export default function App() {
         setNotice("已转化你提供的新闻；原始内容未经独立核实。");
       }
     });
-  const date = new Intl.DateTimeFormat("zh-CN", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    weekday: "long",
-  }).format(new Date());
   return (
     <>
       <header className="topbar">
@@ -213,7 +208,7 @@ export default function App() {
             <span>
               <i /> 地球 Online 正常运行中
             </span>
-            <time>{date}</time>
+            <WorldClock />
             <span>NO SAVE. JUST LIVE.</span>
           </div>
         </section>

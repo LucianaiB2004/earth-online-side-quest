@@ -1,0 +1,26 @@
+.world-clock {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  text-align: center;
+}
+.world-clock b {
+  display: block;
+  font-weight: 400;
+  font-size: inherit;
+  line-height: 1.6;
+}
+.hero-status .world-clock small {
+  display: block;
+  font-family: Consolas, monospace;
+  font-size: inherit;
+  line-height: 1.6;
+  letter-spacing: 1px;
+  color: #a9dfcf;
+}
+@media (min-width: 1100px) and (min-height: 620px) {
+  .hero-status:has(.world-clock) {
+    padding-block: 7px;
+    gap: 5px;
+    bottom: 8px;
+  }
+}
