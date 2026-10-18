@@ -35,4 +35,12 @@ API 测试使用受控响应和虚假测试密钥，不证明真实付费推理�
 
 当前目录最初不是 Git 仓库。用户授权发布后，已创建公开仓库 `LucianaiB2004/earth-online-side-quest` 并启用 GitHub Pages 的 Actions 部署模式。线上状态可在 [部署工作流](https://github.com/LucianaiB2004/earth-online-side-quest/actions/workflows/deploy.yml) 查看。
 
+## GitHub Pages 首次上线验收
+
+2026-10-18 首次部署：[Actions #39122022309](https://github.com/LucianaiB2004/earth-online-side-quest/actions/runs/39122022309) 的 build / deploy 均成功，部署提交 `9f44975`。正式站点为 [在线体验](https://lucianaib2004.github.io/earth-online-side-quest/)，HTTPS 已启用。
+
+对正式网址实际验证：首页 HTTP 200、城市图片 HTTP 200，浏览器内所有图片完整加载；1280×720 视口页面无需滚动，生成演示支线→接受→完成→展示探索 +2、感知 +1 的流程正常；刷新后任务重置。此线上验收仍未使用真实付费 API 密钥。
+
+![GitHub Pages 线上页面](screenshots/live-production.png)
+
 提供 Kiro 兼容 Requirements / Design / Tasks 文档，但本次实际开发工具是 Codex，未操作 Kiro IDE。
