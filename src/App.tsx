@@ -345,10 +345,11 @@ export default function App() {
                   {!quest ? (
                     <div className="empty-quest">
                       <picture className="welcome-background" aria-hidden="true">
-                        <source media="(max-width:999px), (prefers-reduced-motion:reduce)" srcSet={asset("welcome-world")} />
+                        <source media="(max-width:999px)" srcSet={asset("earth-side-quests")} />
+                        <source media="(prefers-reduced-motion:reduce)" srcSet={asset("welcome-world")} />
                         <img src={asset(animateScene ? "welcome-world-animated" : "welcome-world")} alt="" />
                       </picture>
-                      <button className="scene-motion" aria-pressed={animateScene} onClick={() => setAnimateScene(!animateScene)}>{animateScene ? "暂停场景动画" : "播放场景动画"}</button>
+                      <button className="scene-motion" onClick={() => setAnimateScene(!animateScene)}>{animateScene ? "暂停场景动画" : "播放场景动画"}</button>
                       <div className="empty-copy">
                         <span className="chapter">EARTH ONLINE / YOUR SIDE QUEST</span>
                         <h2>
