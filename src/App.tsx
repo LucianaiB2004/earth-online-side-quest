@@ -10,8 +10,7 @@ import {
   generateQuest,
   testConnection,
 } from "./lib/ai";
-import { getDemoQuest, getDemoEventQuest } from "./lib/demo";
-import { loadBulletin } from "./lib/feed";
+import { loadBulletin, bulletinTitle } from "./lib/feed";
 import WorldClock from "./WorldClock";
 
 const asset = (name: string) =>
@@ -56,8 +55,7 @@ export default function App() {
   const [preferences, setPreferences] = useState(false);
   const [quote, setQuote] = useState(0);
   const [eventFilter, setEventFilter] = useState("全部");
-  const serial = useRef(0),
-    request = useRef<AbortController | null>(null),
+  const request = useRef<AbortController | null>(null),
     dialog = useRef<HTMLDialogElement>(null);
   const quotes = [
     "你不必成为谁，今天的你就很好。",
@@ -107,26 +105,15 @@ export default function App() {
     setPhase("offered");
     setTab("quest");
   };
-  const makeQuest = (event?: WorldEvent) => {
-    if (event && !event.isDemo && !config.apiKey.trim()) {
-      setNotice("请先配置 API，再将这条新闻转化为专属支线。");
+  const makeQuest = (event?: WorldEvent, theme?: string) => {
+    if (!config.apiKey.trim()) {
+      setNotice("请先配置 API 密钥，再点击入口生成专属小任务。");
       setSettings(true);
-      return;
-    }
-    if (!config.apiKey.trim() || event?.isDemo) {
-      showQuest(
-        event ? getDemoEventQuest(event) : getDemoQuest(serial.current++),
-      );
-      setNotice(
-        event
-          ? "已从演示事件触发演示支线，未调用 AI。"
-          : "正在体验内置演示支线。配置 API 后可生成专属任务。",
-      );
       return;
     }
     void run("正在发现你的支线", async (signal) => {
       try {
-        const q = await generateQuest(config, interests, event, { signal });
+        const q = await generateQuest(config, theme ? `${theme}。玩家偏好：${interests}` : interests, event, { signal });
         if (!signal.aborted) { showQuest(q); setQuestSource(`${PROVIDERS[config.provider].name} · ${config.model}`); }
       } catch (e) {
         if (signal.aborted) return;
@@ -253,11 +240,11 @@ export default function App() {
                   ? "AI 已连接"
                   : config.apiKey
                     ? "API 待验证"
-                    : "演示模式"}
+                    : "尚未配置 AI"}
                 <small>
                   {config.apiKey
                     ? PROVIDERS[config.provider].name
-                    : "无需密钥，也能先玩一会儿"}
+                    : "配置密钥，生成专属小任务"}
                 </small>
               </div>
               <button aria-label="配置 AI" onClick={() => setSettings(true)}>
@@ -350,9 +337,7 @@ export default function App() {
                     </span>
                     <span>
                       {quest
-                        ? quest.isDemo
-                          ? "演示任务"
-                          : `AI 生成 · ${questSource}`
+                        ? `AI 生成 · ${questSource}`
                         : "等待触发"}
                     </span>
                   </div>
@@ -552,35 +537,30 @@ export default function App() {
                     {
                       icon: "plant",
                       name: "生活探索",
-                      interest: "自然与日常探索",
-                      seed: 0,
+                      interest: "生活探索主题：发现身边的新路线、新角落或日常物品的新细节，生成一个简单现实探索任务",
                     },
                     {
                       icon: "camera",
                       name: "感知体验",
-                      interest: "天空与感知",
-                      seed: 1,
+                      interest: "感知体验主题：通过声音、光线、触感等观察当下，生成一个安静专注的感官体验任务",
                     },
                     {
                       icon: "imagination",
                       name: "创造一点意外",
-                      interest: "想象与创作",
-                      seed: 4,
+                      interest: "创造一点意外主题：用手边物品或一句话做微型创作，生成一个有趣的小创意任务",
                     },
                   ].map((item) => (
                     <button
                       key={item.name}
                       disabled={!!busy}
                       onClick={() => {
-                        setInterests(item.interest);
-                        showQuest(getDemoQuest(item.seed));
-                        setNotice("已触发一条主题演示支线。");
+                        makeQuest(undefined, item.interest);
                       }}
                     >
                       <img src={asset(item.icon)} alt="" />
                       <span>
-                        <strong>{item.name} · 演示</strong>
-                        <small>触发主题演示支线</small>
+                        <strong>{item.name}</strong>
+                        <small>点击生成主题任务</small>
                       </span>
                       <b>›</b>
                     </button>
@@ -620,7 +600,7 @@ export default function App() {
                               : "AIHOT RSS · 来源原文"}
                         </span>
                       </div>
-                      <h2>{event.title}</h2>
+                      <h2>{bulletinTitle(event.title)}</h2>
                       <p>{event.summary}</p>
                       {!!event.entries?.length && <details><summary>展开本期 {event.entries.length} 条事件</summary><ul className="daily-directory">{event.entries.map(entry => <li key={entry.url}><a href={entry.url} target="_blank" rel="noopener noreferrer">{entry.title} ↗</a><button disabled={!!busy || /伤亡|死亡|自杀|色情|凶杀/.test(entry.title)} onClick={() => makeQuest({...event,title:entry.title,sourceTitle:entry.title,summary:entry.title,sourceUrl:entry.url,suggestedQuest:'仅依据标题主题生成安全小任务，不推断新闻正文。'})}>从这条事件生成小任务</button></li>)}</ul></details>}
                       {event.gameNarrative && <div className="event-narrative">
@@ -707,15 +687,7 @@ export default function App() {
                       {String(i + 1).padStart(2, "0")}
                     </span>
                     <div>
-                      <span className="rail-category">
-                        {event.category} ·{" "}
-                        {event.isDemo
-                          ? "演示事件"
-                          : event.provenance === "user"
-                            ? "用户提供 · 未核实"
-                            : event.publishedAt}
-                      </span>
-                      <h3>{event.title}</h3>
+                      <h3>{bulletinTitle(event.title)}</h3>
                       <p>{event.summary}</p>
                       <a href={event.sourceUrl} target="_blank" rel="noopener noreferrer">阅读日报 ↗</a>
                       <button

@@ -1,5 +1,9 @@
 import { it, expect } from 'vitest';
-import { readBulletin } from '../src/lib/feed';
+import { readBulletin, bulletinTitle } from '../src/lib/feed';
+it('shows date and headline without the feed brand prefix', () => {
+  expect(bulletinTitle('AIHOT 日报 · 2026-10-19 — 新模型发布')).toBe('2026-10-19 — 新模型发布');
+  expect(bulletinTitle('普通标题')).toBe('普通标题');
+});
 it('rejects untrusted URLs and preserves source text without AI', () => {
   const data = { fetchedAt: '2026-10-18T00:00:00Z', items: [
     { title: '日报', summary: '<script>bad</script>', url: 'javascript:alert(1)', publishedAt: '2026-10-18' }

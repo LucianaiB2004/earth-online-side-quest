@@ -1,4 +1,7 @@
 import type { WorldEvent } from './types';
+export function bulletinTitle(title: string): string {
+  return title.replace(/^AIHOT\s*日报\s*[·・|：:]\s*/i, '');
+}
 export function readBulletin(data: unknown): { events: WorldEvent[]; fetchedAt: string } {
   const value = data as { fetchedAt?: string; items?: {title: string; summary: string; url: string; publishedAt: string; entries?: {title:string;url:string}[]}[] };
   if (!value || !Array.isArray(value.items) || !value.items.length || !value.fetchedAt || !Number.isFinite(Date.parse(value.fetchedAt))) throw new Error('日报数据格式无效，请稍后刷新。');
