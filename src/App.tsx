@@ -53,6 +53,7 @@ export default function App() {
   const [elapsed, setElapsed] = useState(0);
   const [questSource, setQuestSource] = useState("");
   const [preferences, setPreferences] = useState(false);
+  const [animateScene, setAnimateScene] = useState(true);
   const [quote, setQuote] = useState(0);
   const [eventFilter, setEventFilter] = useState("全部");
   const request = useRef<AbortController | null>(null),
@@ -343,25 +344,22 @@ export default function App() {
                   </div>
                   {!quest ? (
                     <div className="empty-quest">
-                      <div className="welcome-decoration" aria-hidden="true">
-                        <span className="welcome-path" />
-                        <span className="welcome-spark spark-one">✦</span>
-                        <span className="welcome-spark spark-two">✧</span>
-                        <span className="welcome-spark spark-three">✦</span>
-                        <img className="welcome-camera" src={asset("camera")} alt="" />
-                        <img className="welcome-plant" src={asset("plant")} alt="" />
-                      </div>
+                      <picture className="welcome-background" aria-hidden="true">
+                        <source media="(max-width:999px), (prefers-reduced-motion:reduce)" srcSet={asset("welcome-world")} />
+                        <img src={asset(animateScene ? "welcome-world-animated" : "welcome-world")} alt="" />
+                      </picture>
+                      <button className="scene-motion" aria-pressed={animateScene} onClick={() => setAnimateScene(!animateScene)}>{animateScene ? "暂停场景动画" : "播放场景动画"}</button>
                       <div className="empty-copy">
-                        <span className="chapter">致正在认真生活的你</span>
+                        <span className="chapter">EARTH ONLINE / YOUR SIDE QUEST</span>
                         <h2>
-                          今天，会遇见
+                          在地球，
                           <br />
-                          怎样的<span>小小意外？</span>
+                          开启你的<span>人生支线。</span>
                         </h2>
                         <p>
-                          走一条不同的路，留意一束光，
+                          看见一处新风景，留意一个小细节，
                           <br />
-                          或者，向世界释放一点善意。
+                          在熟悉的生活里，发现新的可能。
                         </p>
                         <button
                           aria-label="生成今日支线"
@@ -375,10 +373,9 @@ export default function App() {
                       </div>
                       <div className="quest-art">
                         <img
-                          src={asset("hello")}
-                          alt="两位像素角色友好地打招呼"
+                          src={asset("earth-side-quests")}
+                          alt="地球上的生活支线：小路连接咖啡馆、书店、花园与观景台，人们探索、阅读和相遇"
                         />
-                        <span className="art-tag">下一站：生活里的惊喜</span>
                       </div>
                     </div>
                   ) : (
@@ -411,7 +408,7 @@ export default function App() {
                       {phase === "completed" ? (
                         <div className="rewards" aria-live="polite">
                           <span className="eyebrow">SIDE QUEST COMPLETED</span>
-                          <h3>支线完成！</h3>
+                          <h3><img className="completion-friends" src={asset("side-quest-friends")} alt="" />支线完成！</h3>
                           <p>恭喜玩家，成功触发一次人生支线！</p>
                           <div className="reward-row">
                             {quest.rewards.map((r) => (
@@ -543,17 +540,17 @@ export default function App() {
                 <div className="inspiration-paths" aria-label="更多支线灵感">
                   {[
                     {
-                      icon: "plant",
+                      icon: "life-exploration",
                       name: "生活探索",
                       interest: "生活探索主题：发现身边的新路线、新角落或日常物品的新细节，生成一个简单现实探索任务",
                     },
                     {
-                      icon: "camera",
+                      icon: "sensory-experience",
                       name: "感知体验",
                       interest: "感知体验主题：通过声音、光线、触感等观察当下，生成一个安静专注的感官体验任务",
                     },
                     {
-                      icon: "imagination",
+                      icon: "creative-surprise",
                       name: "创造一点意外",
                       interest: "创造一点意外主题：用手边物品或一句话做微型创作，生成一个有趣的小创意任务",
                     },
