@@ -1,5 +1,8 @@
 import { it, expect } from 'vitest';
 import { readBulletin, bulletinTitle } from '../src/lib/feed';
+it.each(['javascript:alert(1)', 'http://aihot.news/daily/2026-10-19', 'https://evil.test/news', 'https://user:password@aihot.news/daily/2026-10-19'])('rejects an unsafe RSS source: %s', url => {
+  expect(() => readBulletin({fetchedAt:'2026-10-19T00:00:00Z',items:[{title:'日报',summary:'摘要',publishedAt:'2026-10-19',url}]})).toThrow();
+});
 it('shows date and headline without the feed brand prefix', () => {
   expect(bulletinTitle('AIHOT 日报 · 2026-10-19 — 新模型发布')).toBe('2026-10-19 — 新模型发布');
   expect(bulletinTitle('普通标题')).toBe('普通标题');

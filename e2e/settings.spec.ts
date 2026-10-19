@@ -40,7 +40,7 @@ test("两家服务默认配置且提供安全的新标签页密钥入口", async
       .evaluate((el) => el.scrollHeight <= el.clientHeight),
   ).toBe(true);
   await page.screenshot({
-    path: "docs/screenshots/api-settings-new.png",
+    path: "test-results/api-settings.png",
     animations: "disabled",
   });
 });

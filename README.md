@@ -51,10 +51,22 @@ npm run build
 
 .github/workflows/deploy.yml 在 main 推送、手动触发及每小时定时触发时执行 RSS 同步、单元测试、构建和 Pages 部署。Pages 来源设为 GitHub Actions，不需要模型密钥。cron 为每小时第17分钟；GitHub 可能延迟或因长期无活动停用定时任务，界面同步时间会反映数据陈旧状态。
 
-功能验收使用发布后的站点；构建成功不等于真实模型调用成功。首次体验报告保存在本地 docs/qa/2026-10-18-live-user-test/REPORT.md，针对更新前版本。旧 e2e 包含已移除的世界事件流程，仅为历史参考，不能作为当前日报版通过证据。
+功能验收使用发布后的站点；构建成功不等于真实模型调用成功。首次体验报告保存在本地 docs/qa/2026-10-18-live-user-test/REPORT.md，针对更新前版本。退役浏览器测试与旧验收已移入 docs/archive/early-development，不能作为当前版通过证据；e2e/ 仅保留时钟与设置检查。
 
 桌面采用导航、任务、日报三栏；长内容在面板内滚动，小屏自然纵向布局。世界时钟读取设备时间，按北京时间每秒更新，不是联网校时。HUMAN SERVER 为世界观设定。
 
 素材来自用户提供的 UI素材包，归相应权利人所有。历史需求见 .kiro/specs/earth-online-side-quest/；实际实现工具为 Codex，不宣称运行 Kiro。
 
 2026-10-19 新主题素材由用户提供的 earth-online-ui-assets.zip 导入。首页使用生活小镇大场景及真实动画，三个任务主题使用对应图标，手机端使用透明地球插画，完成奖励展示双人角色。发布资源统一编码为 WebP，动画保留32帧循环；提供暂停按钮，系统减少动态效果时改用静态场景。原始素材保存在本地 UI素材包/earth-online-ui-assets，发布仅包含 public/assets 中优化后的文件。
+
+## 目录与收尾状态
+
+- `src/`：当前应用与AI任务、RSS适配代码。
+- `public/assets/`：页面实际使用的优化素材。
+- `tests/`：当前单元测试及测试专用夹具。
+- `e2e/`：仍适用的浏览器检查脚本。
+- `scripts/`：素材切分、公开RSS同步。
+- `docs/requirements/`：原始需求；`docs/archive/`：历史资料；`docs/qa/`：仅本机保留的线上验收。
+- `UI素材包/`：原始素材；`.github/`：部署工作流；`.kiro/`：早期项目规格。
+
+详见 [文档索引与整理记录](docs/README.md)。当前版本已收尾，不再保留废弃的演示任务和模型新闻搜索／改写入口代码。重新构建会生成 dist，依赖与产物均不提交仓库。

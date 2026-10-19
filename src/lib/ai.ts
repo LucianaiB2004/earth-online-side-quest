@@ -4,7 +4,6 @@ import {
   type ApiConfig,
   type Quest,
   type WorldEvent,
-  type NewsSource,
 } from "./types";
 
 export class ApiError extends Error {
@@ -30,19 +29,6 @@ function str(v: unknown, max = 500, min = 1): string {
   if (typeof v !== "string" || v.trim().length < min || v.length > max)
     throw new ApiError("AI 返回的文字长度不符合要求，请重试。", "schema");
   return v.trim();
-}
-export function safeUrl(value: unknown): string {
-  if (typeof value !== "string") return "";
-  try {
-    const u = new URL(value);
-    return ["https:", "http:"].includes(u.protocol) &&
-      !u.username &&
-      !u.password
-      ? u.href
-      : "";
-  } catch {
-    return "";
-  }
 }
 export function validateQuest(value: unknown): Quest {
   const q = object(value);
@@ -142,12 +128,9 @@ async function request(
   config: ApiConfig,
   body: unknown,
   options: RequestOptions = {},
-  native = false,
 ): Promise<Record<string, unknown>> {
   const url = validateConfig(config);
-  url.pathname = native
-    ? "/api/v1/services/aigc/text-generation/generation"
-    : `${url.pathname.replace(/\/$/, "")}/chat/completions`;
+  url.pathname = `${url.pathname.replace(/\/$/, "")}/chat/completions`;
   const controller = new AbortController();
   const cancel = () => controller.abort();
   if (options.signal?.aborted) throw new ApiError("请求已取消。", "aborted");
@@ -195,7 +178,7 @@ async function request(
         options.signal?.aborted ? "aborted" : "timeout",
       );
     throw new ApiError(
-      "无法连接服务：可能是网络或浏览器跨域限制。请检查官方地址及网络；也可以先体验演示模式。",
+      "无法连接服务：可能是网络或浏览器跨域限制。请检查官方地址及网络后重试。",
       "network",
     );
   } finally {
@@ -203,8 +186,8 @@ async function request(
     options.signal?.removeEventListener("abort", cancel);
   }
 }
-function content(data: Record<string, unknown>, native = false): unknown {
-  const root = native ? object(data.output) : data;
+function content(data: Record<string, unknown>): unknown {
+  const root = data;
   if (!Array.isArray(root.choices) || !root.choices.length)
     throw new ApiError("模型未返回内容。", "schema");
   const choice = object(root.choices[0]);
@@ -290,143 +273,4 @@ export async function testConnection(
     },
     options,
   );
-}
-function eventFrom(
-  value: unknown,
-  original: NewsSource,
-  provenance: WorldEvent["provenance"],
-): WorldEvent {
-  const e = object(value);
-  return {
-    title: str(e.title, 60),
-    summary: str(e.summary, 500),
-    category: str(e.category, 30),
-    reason: str(e.reason, 250),
-    gameNarrative: str(e.gameNarrative, 500),
-    suggestedQuest:
-      e.suggestedQuest === null ? null : str(e.suggestedQuest, 250),
-    sourceTitle: original.title,
-    sourceName: original.name,
-    sourceUrl: original.url,
-    publishedAt: original.publishedAt,
-    original: { ...original },
-    isDemo: provenance === "demo",
-    provenance,
-  };
-}
-const eventShape =
-  "每条事件字段为 title(60字内世界事件名), summary(500字内忠实摘要), category(30字内), reason(250字内关注理由), gameNarrative(500字内创意叙事), suggestedQuest(250字内安全个人任务灵感，严重灾害、伤亡、悲剧或不适合任务的新闻必须为null且严肃中性叙事)。不推断事实、日期或链接。";
-export async function gameifyNews(
-  config: ApiConfig,
-  text: string,
-  options?: RequestOptions,
-): Promise<WorldEvent> {
-  if (text.trim().length < 10 || text.length > 8000)
-    throw new ApiError("请粘贴 10 至 8000 字的新闻标题、链接或正文。", "input");
-  const input = text;
-  const urls = input.match(/https?:\/\/[^\s<>"'，。；！？、（）【】]+/gi) ?? [];
-  const sourceUrl =
-    urls
-      .map((value) => safeUrl(value.replace(/[),.;!?\]]+$/, "")))
-      .find(Boolean) ?? "";
-  const original: NewsSource = {
-    title: input.trim().split("\n")[0].slice(0, 100),
-    text: input,
-    url: sourceUrl,
-    name: "用户提供 · 未独立核实",
-    publishedAt: "未核实",
-  };
-  return structured(
-    config,
-    `${eventShape}只返回一个事件JSON。仅根据以下用户提供的材料改写，不把链接当成已经读取的网页。如果只有链接或标题，明确说明材料不足，不补写新闻事实。材料：${JSON.stringify(input)}`,
-    (value) => eventFrom(value, original, "user"),
-    options,
-  );
-}
-export async function fetchWorldEvents(
-  config: ApiConfig,
-  interests = "",
-  options?: RequestOptions,
-): Promise<WorldEvent[]> {
-  if (config.provider !== "aliyun")
-    throw new ApiError(
-      "本项目的联网搜索仅接入阿里云。请切换阿里云，或使用 DeepSeek 转化粘贴的新闻内容。",
-      "unsupported",
-    );
-  const date = new Intl.DateTimeFormat("sv-SE", {
-    timeZone: "Asia/Shanghai",
-  }).format(new Date());
-  const data = await request(
-    config,
-    {
-      model: config.model,
-      input: {
-        messages: [
-          {
-            role: "system",
-            content: `${safety}你同时是热点研究员，只使用本次真实搜索结果，优先原始官方公告。`,
-          },
-          {
-            role: "user",
-            content: `今天是${date}，搜索今日或最近7天真实热点，兴趣参考：${JSON.stringify(interests.slice(0, 500))}。关注科技、科学、文化、体育，去重且宁缺毋滥。${eventShape} 返回JSON {"events":[...]}，最多4条，每条额外给出sourceUrl，必须与搜索来源链接完全一致。不编造日期。`,
-          },
-        ],
-      },
-      parameters: {
-        result_format: "message",
-        enable_search: true,
-        search_options: {
-          forced_search: true,
-          enable_source: true,
-          search_strategy: "turbo",
-          freshness: 7,
-        },
-        max_tokens: 3000,
-      },
-    },
-    options,
-    true,
-  );
-  const output = object(data.output);
-  const sources = output.search_info
-    ? object(output.search_info).search_results
-    : undefined;
-  if (!Array.isArray(sources) || !sources.length)
-    throw new ApiError(
-      "服务未返回可核验的搜索来源，未将模型回答作为真实热点。请重试或使用演示事件。",
-      "sources",
-    );
-  const sourceMap = new Map<string, NewsSource>();
-  for (const raw of sources) {
-    const source = object(raw);
-    const url = safeUrl(source.url);
-    if (url && typeof source.title === "string")
-      sourceMap.set(url, {
-        title: str(source.title, 500),
-        text: "",
-        url,
-        name: new URL(url).hostname,
-        publishedAt: "来源未提供可核验发布时间",
-      });
-  }
-  const parsed = object(content(data, true));
-  if (!Array.isArray(parsed.events) || parsed.events.length > 4)
-    throw new ApiError("搜索结果格式不正确，请重试。", "schema");
-  const used = new Set<string>();
-  const events: WorldEvent[] = [];
-  for (const raw of parsed.events) {
-    const e = object(raw);
-    const url = safeUrl(e.sourceUrl);
-    const source = sourceMap.get(url);
-    if (source && !used.has(url)) {
-      events.push(eventFrom(e, source, "search"));
-      used.add(url);
-    }
-  }
-  if (!events.length)
-    throw new ApiError(
-      "模型事件未匹配到真实搜索来源，结果已拒绝。请重试或粘贴新闻。",
-      "sources",
-    );
-  return events;
 }
