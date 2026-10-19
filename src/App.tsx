@@ -262,6 +262,7 @@ export default function App() {
               <small>只有你和生活的偶然相遇。</small>
             </div>
             <div className="signpost">
+              <img className="signpost-art" src={asset("signpost-complete")} alt="" />
               <span>
                 主线：生活
                 <br />
@@ -575,6 +576,12 @@ export default function App() {
               </>
             ) : (
               <div className="world-area">
+                <div className="world-field-guide">
+                  <img className="world-guide-earth" src={asset("earth-side-quests")} alt="像素地球上的生活支线地图" />
+                  <div><span>WORLD FIELD GUIDE</span><h2>世界在更新，支线等你发现。</h2><p>读一则新鲜事，给今天添一点灵感。</p></div>
+                  <img className="world-guide-friends" src={asset("side-quest-friends")} alt="两位探索者友好地招手" />
+                  <span className="world-guide-star" aria-hidden="true">✦</span>
+                </div>
                 <div className="world-toolbar">
                   <p>
                     现实世界持续运行。
@@ -707,7 +714,7 @@ export default function App() {
                 ))}
             </div>
             <div className="rail-bottom">
-              <img src={asset("camp")} alt="" />
+              <img className="rail-companion" src={asset("side-quest-friends")} alt="" />
               <p>
                 现实世界持续运行，
                 <br />
