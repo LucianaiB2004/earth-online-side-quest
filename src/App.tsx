@@ -343,6 +343,14 @@ export default function App() {
                   </div>
                   {!quest ? (
                     <div className="empty-quest">
+                      <div className="welcome-decoration" aria-hidden="true">
+                        <span className="welcome-path" />
+                        <span className="welcome-spark spark-one">✦</span>
+                        <span className="welcome-spark spark-two">✧</span>
+                        <span className="welcome-spark spark-three">✦</span>
+                        <img className="welcome-camera" src={asset("camera")} alt="" />
+                        <img className="welcome-plant" src={asset("plant")} alt="" />
+                      </div>
                       <div className="empty-copy">
                         <span className="chapter">致正在认真生活的你</span>
                         <h2>
