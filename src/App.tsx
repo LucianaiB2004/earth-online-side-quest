@@ -575,12 +575,13 @@ export default function App() {
                 </div>
               </>
             ) : (
-              <div className="world-area">
+              <div className="world-area" data-motion={animateScene ? "playing" : "paused"}>
                 <div className="world-field-guide">
                   <img className="world-guide-earth" src={asset("earth-side-quests")} alt="像素地球上的生活支线地图" />
                   <div><span>WORLD FIELD GUIDE</span><h2>世界在更新，支线等你发现。</h2><p>读一则新鲜事，给今天添一点灵感。</p></div>
                   <img className="world-guide-friends" src={asset("side-quest-friends")} alt="两位探索者友好地招手" />
                   <span className="world-guide-star" aria-hidden="true">✦</span>
+                  <button className="world-motion" onClick={() => setAnimateScene(!animateScene)}>{animateScene ? "暂停装饰动效" : "播放装饰动效"}</button>
                 </div>
                 <div className="world-toolbar">
                   <p>
@@ -714,7 +715,7 @@ export default function App() {
                 ))}
             </div>
             <div className="rail-bottom">
-              <img className="rail-companion" src={asset("side-quest-friends")} alt="" />
+              <img className="rail-companion" style={{animationPlayState: animateScene ? "running" : "paused"}} src={asset("side-quest-friends")} alt="" />
               <p>
                 现实世界持续运行，
                 <br />
