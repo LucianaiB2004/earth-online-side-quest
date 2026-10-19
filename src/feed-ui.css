@@ -12,3 +12,12 @@
 .daily-directory a { color:#85dbec; }
 .daily-directory button { display:block; margin:5px 0; padding:5px 8px; border:1px solid #35536f; background:#172c43; color:#c4e7f2; }
 @media (max-width:900px) { .quest-utility { flex-wrap:wrap; } }
+@media (min-width:1000px) and (max-height:800px) {
+  .play-area:has(.empty-quest) .adventure-banner { height:48px; min-height:48px; }
+  .empty-quest { padding:10px 20px; align-items:center; }
+  .empty-copy h2 { font-size:25px; line-height:1.3; margin:5px 0; }
+  .empty-copy p { line-height:1.5; margin:5px 0 8px; }
+  .empty-copy .chapter, .empty-copy > small, .art-tag { display:none; }
+  .empty-copy .primary { margin:6px 0; min-height:38px; }
+  .quest-art img { max-height:140px; }
+}
