@@ -76,7 +76,7 @@
   .world-field-guide h2 { font-size:18px; }
 }
 @media (max-width:699px) {
-  .world-field-guide { grid-template-columns:90px minmax(0,1fr); padding:12px; gap:10px; min-height:130px; }
+  .world-field-guide { grid-template-columns:90px minmax(0,1fr); padding:12px 12px 28px; gap:10px; min-height:146px; }
   .world-field-guide .world-guide-friends { display:none; }
   .world-field-guide h2 { font-size:16px; }
   .world-guide-star { right:14px; top:10px; }
